@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source "/etc/nexus/conf/conf.sh"
+source "${NEXUS_OPT_DIR}/lib/checks.sh"
+source "${NEXUS_OPT_DIR}/lib/print.sh"
+source "${NEXUS_OPT_DIR}/lib/log.sh"
+
+print_header "SCHEDULING SUBTITLE DOWNLOADER - BEOFRE USE MAKE SURE MEDIA LIBRARY HAS BEEN PROCESSED BY ENIACore's Media Library Manager!"
+
+# Ensure variables are present
+require_file "${NEXUS_ETC_DIR}/keys/mlm.sh" "mlm api key file containing standard mlm configurations"
+source "${NEXUS_ETC_DIR}/keys/mlm.sh"
+
+print_step "Ensuring Media Library Manager tool is in path"
+curl -fsSL https://raw.githubusercontent.com/ENIACore/media-library-manager/main/install.py -o /tmp/mlm-install.py && sudo python3 /tmp/mlm-install.py; rm -f /tmp/mlm-install.py
