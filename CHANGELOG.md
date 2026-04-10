@@ -34,3 +34,21 @@ stable enough to install on a fresh server.
 - Service installers: Nextcloud, Vaultwarden, Jellyfin, jfa-go,
   qBittorrent (via the hotio image with built-in WireGuard), Jackett,
   FlareSolverr, a Fabric Minecraft server with Lithium, PostgreSQL, and a
+  generic personal-site container.
+- Operational utility scripts: `docker-network-inspect`,
+  `docker-system-prune`, `docker-volume-rm`, `scan-ports`, `ipv4-get`,
+  `add-healthcheck-cron`, `mask-sleep`, `unmask-sleep`.
+- Community/project files: README, CONTRIBUTING guide, Code of Conduct,
+  Security policy, issue templates, and pull request template.
+
+### Security
+
+- Nginx hardening snippets (`security.conf`, `block-exploits.conf`,
+  `ssl-params.conf`, `blocked-ips.conf`, `rate-limits.conf`).
+- Catchall vhost now serves the real certificate instead of the unmounted
+  snakeoil cert for unmatched 443 hostnames.
+- Fail2ban and UFW wired into the base install for baseline intrusion
+  prevention and firewalling.
+
+[Unreleased]: https://github.com/ENIACore/server-configs/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/ENIACore/server-configs/releases/tag/v1.0.0
