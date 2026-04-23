@@ -57,3 +57,32 @@ def setup_blocklist() -> None:
         print_warning("Failed to update IP blocklist, continuing anyway")
 
 
+def enable_ufw() -> None:
+    print_step("Enabling UFW firewall...")
+    run_cmd("sudo ufw --force enable")
+    print_success("UFW firewall configured and enabled successfully")
+
+
+def main():
+    print_header("CONFIGURING UFW FIREWALL FOR SERVER")
+
+    install_packages()
+
+    print_step(
+        f"Creating UFW configuration directory at {UFW_CONFIG_PATH}..."
+    )
+    ensure_dir(str(UFW_CONFIG_PATH))
+
+    configure_ufw()
+    setup_blocklist()
+    enable_ufw()
+
+    print_info("")
+    print_info("Next steps:")
+    print_info("1. Run ufw-schedule to set up automatic blocklist updates")
+    print_info("2. Use 'sudo ufw status' to view current firewall rules")
+    print_info("3. Run ufw-update to manually update the IP blocklist")
+
+
+if __name__ == "__main__":
+    main()
