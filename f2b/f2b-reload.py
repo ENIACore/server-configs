@@ -29,3 +29,34 @@ def wait_for_fail2ban():
             ["sudo", "fail2ban-client", "ping"],
             capture_output=True,
         )
+        if result.returncode == 0:
+            print_success("fail2ban successfully pinged")
+            return
+        time.sleep(1)
+    print_error("fail2ban socket did not respond, check on fail2ban health")
+    sys.exit(1)
+
+
+def install_fail2ban() -> None:
+    result = run_cmd("dpkg -s fail2ban", capture_output=True)
+    if result.returncode == 0:
+        print_info("fail2ban already installed, skipping")
+        return
+    print_step("Installing fail2ban...")
+    run_cmd("sudo apt update && sudo apt install fail2ban -y")
+
+
+def ensure_nginx_logs() -> None:
+    """Touch placeholder nginx log files so fail2ban jails can resolve the logpath glob.
+    fail2ban crashes at startup if no files match the logpath pattern."""
+    ensure_dir(NGINX_LOG_DIR)
+    print_step(f"Ensuring nginx log placeholders exist in {NGINX_LOG_DIR}...")
+    for name in NGINX_LOG_PLACEHOLDERS:
+        run_cmd(f"sudo touch {NGINX_LOG_DIR}/{name}")
+
+
+def generate_jail_local() -> None:
+    print_step(f"Generating jail.local at {F2B_JAIL_SRC}...")
+    write_lines(
+        F2B_JAIL_SRC,
+        [
