@@ -38,3 +38,23 @@ def main():
             "# Updates blocklist every morning and on reboot",
             "",
             "SHELL=/bin/bash",
+            "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin",
+            "",
+            "# Run on boot",
+            f"@reboot root {UFW_BLOCKLIST_SCRIPT}",
+            "",
+            "# Run daily at 05:00",
+            f"{UFW_CRON_SCHEDULE} root {UFW_BLOCKLIST_SCRIPT}",
+        ],
+    )
+
+    run_cmd(f"sudo chmod 644 {UFW_CRON_FILE}")
+    run_cmd(f"sudo chmod 644 {UFW_BLOCKLIST_SCRIPT}")
+    run_cmd(f"sudo chmod +x {UFW_BLOCKLIST_SCRIPT}")
+
+    print_success(f"Cron job created at {UFW_CRON_FILE}")
+    print_info("UFW blocklist update will run daily at 05:00 as root")
+
+
+if __name__ == "__main__":
+    main()
