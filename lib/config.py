@@ -34,3 +34,38 @@ JFA_CONFIG_PATH = Path("/etc/jfa")
 NEXTCLOUD_CONFIG_PATH = Path("/etc/nextcloud")
 JACKETT_CONFIG_PATH = Path("/etc/jackett")
 VAULT_CONFIG_PATH = Path("/etc/vault")
+RAID_CONFIG_PATH = Path("/etc/raid")
+MC_CONFIG_PATH = Path("/etc/mc")
+QBIT_CONFIG_PATH = Path("/etc/qbit")
+
+# Ubuntu settings
+SERVER_USER: str = "server"
+
+# Docker settings
+DOCKER_NETWORK_NAME: str = "server-net"
+DOCKER_NETWORK_SUBNET: str = "172.20.0.0/24"
+DOCKER_NETWORK_GATEWAY: str = "172.20.0.1"
+
+
+def load_config() -> dict:
+    """Load config from disk. Returns empty dict if file does not exist."""
+    if not SERVER_CONFIG_FILE_PATH.exists():
+        return {}
+    try:
+        return json.loads(SERVER_CONFIG_FILE_PATH.read_text())
+    except json.JSONDecodeError as e:
+        print_error(f"Config file is malformed: {e}")
+        print_error(f"Fix or delete {SERVER_CONFIG_FILE_PATH} and re-run")
+        sys.exit(1)
+
+
+def save_config(data: dict) -> None:
+    """Write config dict to disk, creating parent directories if needed."""
+    try:
+        SERVER_CONFIG_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        SERVER_CONFIG_FILE_PATH.write_text(json.dumps(data, indent=2) + "\n")
+        SERVER_CONFIG_FILE_PATH.chmod(0o600)
+    except OSError as e:
+        print_error(f"Failed to write config: {e}")
+        sys.exit(1)
+
