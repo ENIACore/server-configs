@@ -69,3 +69,38 @@ def save_config(data: dict) -> None:
         print_error(f"Failed to write config: {e}")
         sys.exit(1)
 
+
+def get_config_value(key: str) -> str | None:
+    """Return a single value from config by key, or None if not set."""
+    return load_config().get(key)
+
+
+def set_config_value(key: str, value: str) -> None:
+    """Set a single key in config, overwriting if it already exists."""
+    config = load_config()
+    existed = key in config
+    config[key] = value
+    save_config(config)
+    if existed:
+        print_info(f"Config updated: {key}")
+    else:
+        print_success(f"Config saved: {key}")
+
+
+def require_config_value(key: str) -> str:
+    """Return config value for key, exit with error if not set."""
+    value = get_config_value(key)
+    if not value:
+        print_error(f"Required config key '{key}' is not set")
+        print_error(
+            f"Run the setup script or set it with set_config_value('{key}', ...)"
+        )
+        sys.exit(1)
+    return value
+
+
+def prompt_and_save(
+    key: str, prompt: str, default: str = "", secret: bool = False
+) -> str:
+    """Prompt user for a value, save it to config, and return it.
+    Always prompts — use ensure_config_value() to skip if already set.
