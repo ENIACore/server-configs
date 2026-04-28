@@ -92,3 +92,34 @@ def generate_jail_local() -> None:
             f"logpath = {NGINX_LOG_DIR}/*.log",
         ],
     )
+
+
+def main():
+    print_header("CONFIGURING FAIL2BAN FOR NGINX")
+
+    install_fail2ban()
+
+    ensure_dir(str(F2B_CONFIG_PATH))
+
+    ensure_nginx_logs()
+
+    generate_jail_local()
+
+    print_step(f"Symlinking {F2B_JAIL_SRC} -> {F2B_JAIL_DEST}...")
+    run_cmd(f"sudo ln -sf {F2B_JAIL_SRC} {F2B_JAIL_DEST}")
+
+    print_step("Restarting and enabling fail2ban...")
+    run_cmd("sudo systemctl restart fail2ban")
+    run_cmd("sudo systemctl enable fail2ban")
+    wait_for_fail2ban()
+
+    print_success("fail2ban configured successfully")
+    print_info("")
+    print_info("Next steps:")
+    print_info(f"  - Check active jails: sudo fail2ban-client status")
+    print_info(f"  - Edit config:        {F2B_JAIL_SRC}")
+    print_info(f"  - Reload changes:     sudo systemctl reload fail2ban")
+
+
+if __name__ == "__main__":
+    main()
