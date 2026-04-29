@@ -50,3 +50,29 @@ def save_admin_password(vault_data_dir: str, password: str) -> str:
     pass_file = Path(vault_data_dir) / VAULT_ADMIN_PASS_FILE
     pass_file.write_text(password + "\n")
     pass_file.chmod(0o600)
+    print_info(f"Admin password saved to {pass_file} (keep this safe!)")
+    return str(pass_file)
+
+
+def main():
+    print_header("SETTING UP VAULTWARDEN PASSWORD MANAGER")
+
+    essential_path = require_config_value("ESSENTIAL_SERVICES_PATH")
+    vault_subdomain = require_config_value("VAULT_SUBDOMAIN")
+
+    require_dir(essential_path, "Essential services path")
+
+    vault_data_dir = f"{essential_path}/vw-data"
+
+    print_step(f"Creating Vaultwarden data directory at {vault_data_dir}...")
+    ensure_dir(vault_data_dir)
+
+    ensure_packages(["argon2"])
+
+    print_step("Generating Vaultwarden admin password and argon2id token...")
+    admin_password, admin_token = generate_admin_token()
+    pass_file = save_admin_password(vault_data_dir, admin_password)
+
+    ensure_network()
+
+    run_container(
