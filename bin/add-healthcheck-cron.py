@@ -42,3 +42,25 @@ def main() -> None:
         sys.exit(1)
 
     print_step(f"Writing system cron job to {CRON_FILE}...")
+
+    write_lines(
+        CRON_FILE,
+        [
+            "# Healthchecks.io ping - runs every 2 minutes",
+            "",
+            "SHELL=/bin/bash",
+            "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin",
+            "",
+            f"{CRON_SCHEDULE} root curl -fsS --retry 3 {url} > /dev/null",
+        ],
+    )
+
+    run_cmd(f"sudo chmod 644 {CRON_FILE}")
+
+    print_success(f"Cron job created at {CRON_FILE}")
+    print_success("Healthcheck ping will run every 2 minutes as root")
+    print_info(f"Pinging: {url}")
+
+
+if __name__ == "__main__":
+    main()
