@@ -76,3 +76,29 @@ def main():
     ensure_network()
 
     run_container(
+        name="vaultwarden",
+        opts=[
+            "--network",
+            DOCKER_NETWORK_NAME,
+            "--env",
+            f"DOMAIN=https://{vault_subdomain}",
+            "--env",
+            f"ADMIN_TOKEN={admin_token}",
+            "--env",
+            "SIGNUPS_ALLOWED=false",
+            "--volume",
+            f"{vault_data_dir}:/data/",
+            "--restart",
+            "unless-stopped",
+            "vaultwarden/server:latest",
+        ],
+        notes=[
+            f"Access the admin panel at https://{vault_subdomain}/admin",
+            f"Use the password stored in {pass_file} to log in",
+            f"Data will be stored in {vault_data_dir}",
+        ],
+    )
+
+
+if __name__ == "__main__":
+    main()
