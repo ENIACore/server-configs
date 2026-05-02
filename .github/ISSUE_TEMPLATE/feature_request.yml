@@ -1,0 +1,18 @@
+name: Feature request
+description: Suggest an idea or new service integration for this project
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement! Please describe the problem
+        you're trying to solve as well as your proposed solution.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear description of what the problem is.
+      placeholder: I'm always frustrated when...
+    validations:
