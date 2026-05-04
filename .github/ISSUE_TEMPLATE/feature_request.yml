@@ -35,3 +35,21 @@ body:
   - type: dropdown
     id: area
     attributes:
+      label: Area
+      description: Which part of the project does this affect?
+      options:
+        - New service integration (e.g. new self-hosted app)
+        - Nginx / reverse proxy
+        - Cloudflare / DNS
+        - Security (UFW, Fail2ban)
+        - Install / setup scripts
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context, screenshots, or references here.
