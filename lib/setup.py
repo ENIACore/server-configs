@@ -188,3 +188,66 @@ def copy_static_sites() -> None:
 
     Must not touch the directory wholesale (unlike copy_nginx_config's
     other subdirs) since process_templates() already wrote the real,
+    domain-substituted site configs there — a directory-level copy would
+    wipe those out and leave only the static files.
+    """
+    src_dir = SERVER_CLONE_PATH / "nginx" / "sites-available"
+    dest_dir = NGINX_CONFIG_PATH / "sites-available"
+
+    print_step(f"Copying static site configs to {dest_dir}...")
+    ensure_dir(str(dest_dir))
+    for src in src_dir.glob("*.conf"):
+        copy_path(src, dest_dir / src.name)
+
+
+def copy_nginx_config() -> None:
+    """
+    Copies all relevant nginx config files into /etc/nginx for future use
+    """
+    nginx_src_path = SERVER_CLONE_PATH / "nginx"
+
+    print_step(f"Copying nginx configuration to {NGINX_CONFIG_PATH}...")
+    for subdir in ["conf", "conf.d", "snippets", "streams-available"]:
+        copy_path(nginx_src_path / subdir, NGINX_CONFIG_PATH / subdir)
+
+    copy_static_sites()
+
+    for subdir in ["sites-enabled", "streams-enabled"]:
+        print_step(f"Creating {NGINX_CONFIG_PATH / subdir}...")
+        ensure_dir(str(NGINX_CONFIG_PATH / subdir))
+
+
+def cleanup():
+    print_step("Cleaning up temporary files...")
+
+    if SERVER_CLONE_PATH.exists():
+        try:
+            shutil.rmtree(SERVER_CLONE_PATH)
+            print_success(f"Removed temporary directory {SERVER_CLONE_PATH}")
+        except Exception:
+            print_warning(f"Failed to remove {SERVER_CLONE_PATH}")
+
+    # Remove self and original install script path
+    script_path = Path(__file__).resolve()
+    try:
+        script_path.unlink(missing_ok=True)
+        print_success(f"Removed setup script {script_path}")
+    except Exception:
+        print_warning(f"Failed to remove setup script {script_path}")
+
+    script_path = Path("/tmp/server-install.py")
+    try:
+        script_path.unlink(missing_ok=True)
+        print_success(f"Removed installer script {script_path}")
+    except Exception:
+        print_warning(f"Failed to remove installer script {script_path}")
+
+
+if __name__ == "__main__":
+    create_directories()
+    copy_template_files()
+    create_config()
+    root_domain = require_config_value("ROOT_DOMAIN")
+    process_templates(root_domain)
+    copy_nginx_config()
+    cleanup()
