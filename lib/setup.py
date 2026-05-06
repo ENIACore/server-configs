@@ -124,3 +124,67 @@ def create_config():
     print_info(
         f"Core services are services used daily (minecraft, nextcloud)"
     )
+    set_config_value("CORE_SERVICES_PATH", "/mnt/core")
+
+    print_info(f"Setting essential media path (/mnt/media)")
+    print_info(
+        f"Media services are services used for media hosting (qbittorrent, jellyfin, jackett)"
+    )
+    set_config_value("MEDIA_SERVICES_PATH", "/mnt/media")
+
+    prompt_and_save(
+        "CF_API_KEY",
+        "Enter the Cloudflare Bearer API token for DNS updates",
+        secret=True,
+    )
+
+    print_info(f"Setting CF_CONFIG_PATH ({CF_CONFIG_PATH})")
+    set_config_value("CF_CONFIG_PATH", str(CF_CONFIG_PATH))
+    print_info(f"Setting NGINX_CONFIG_PATH ({NGINX_CONFIG_PATH})")
+    set_config_value("NGINX_CONFIG_PATH", str(NGINX_CONFIG_PATH))
+    print_info(f"Setting F2B_CONFIG_PATH ({F2B_CONFIG_PATH})")
+    set_config_value("F2B_CONFIG_PATH", str(F2B_CONFIG_PATH))
+    print_info(f"Setting UFW_CONFIG_PATH ({UFW_CONFIG_PATH})")
+    set_config_value("UFW_CONFIG_PATH", str(UFW_CONFIG_PATH))
+    print_info(f"Setting JELLY_CONFIG_PATH ({JELLY_CONFIG_PATH})")
+    set_config_value("JELLY_CONFIG_PATH", str(JELLY_CONFIG_PATH))
+    print_info(f"Setting JFA_CONFIG_PATH ({JFA_CONFIG_PATH})")
+    set_config_value("JFA_CONFIG_PATH", str(JFA_CONFIG_PATH))
+    print_info(f"Setting NEXTCLOUD_CONFIG_PATH ({NEXTCLOUD_CONFIG_PATH})")
+    set_config_value("NEXTCLOUD_CONFIG_PATH", str(NEXTCLOUD_CONFIG_PATH))
+    print_info(f"Setting JACKETT_CONFIG_PATH ({JACKETT_CONFIG_PATH})")
+    set_config_value("JACKETT_CONFIG_PATH", str(JACKETT_CONFIG_PATH))
+    print_info(f"Setting VAULT_CONFIG_PATH ({VAULT_CONFIG_PATH})")
+    set_config_value("VAULT_CONFIG_PATH", str(VAULT_CONFIG_PATH))
+    print_info(f"Setting RAID_CONFIG_PATH ({RAID_CONFIG_PATH})")
+    set_config_value("RAID_CONFIG_PATH", str(RAID_CONFIG_PATH))
+    print_info(f"Setting MC_CONFIG_PATH ({MC_CONFIG_PATH})")
+    set_config_value("MC_CONFIG_PATH", str(MC_CONFIG_PATH))
+    print_info(f"Setting SERVER_CONFIG_PATH ({SERVER_CONFIG_PATH})")
+    set_config_value("SERVER_CONFIG_PATH", str(SERVER_CONFIG_PATH))
+
+
+def process_templates(root_domain: str) -> None:
+    """
+    Substitutes domain into template files and moves them to /etc/nginx/sites-available for future use
+    """
+    template_dir = SERVER_CLONE_PATH / "nginx/templates"
+    sites_available = NGINX_CONFIG_PATH / "sites-available"
+
+    ensure_dir(str(sites_available))
+
+    for template in template_dir.glob("*.template"):
+        dest_name = template.name.replace(".template", "")
+        dest = sites_available / dest_name
+        text = template.read_text().replace("${DOMAIN}", root_domain)
+        write_lines(dest, text.splitlines())
+        print_success(f"Processed template: {template.name} → {dest_name}")
+
+
+def copy_static_sites() -> None:
+    """
+    Copies static (non-template) site configs from the repo's
+    nginx/sites-available into /etc/nginx/sites-available, file by file.
+
+    Must not touch the directory wholesale (unlike copy_nginx_config's
+    other subdirs) since process_templates() already wrote the real,
