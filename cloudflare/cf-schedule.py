@@ -14,3 +14,19 @@ CF_DNS_SCRIPT = "/usr/local/sbin/cf-update-dns"
 
 
 def main():
+    print_header("SCHEDULING DNS UPDATE JOB")
+
+    require_config_value("CF_API_KEY")
+    require_server_user()
+
+    print_step(f"Creating system cron job at {CF_CRON_FILE}...")
+
+    write_lines(
+        CF_CRON_FILE,
+        [
+            "# Cloudflare DNS updater - runs as root",
+            f"# Updates DNS records every 5 minutes and on reboot",
+            f"",
+            f"SHELL=/bin/bash",
+            f"PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin",
+            f"",
