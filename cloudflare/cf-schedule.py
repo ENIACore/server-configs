@@ -30,3 +30,19 @@ def main():
             f"SHELL=/bin/bash",
             f"PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin",
             f"",
+            f"# Run on boot",
+            f"@reboot root {CF_DNS_SCRIPT} >> /var/log/cloudflare/cron.log 2>&1",
+            f"",
+            f"# Run every 5 minutes",
+            f"{CF_CRON_SCHEDULE} root {CF_DNS_SCRIPT} >> /var/log/cloudflare/cron.log 2>&1",
+        ],
+    )
+
+    run_cmd(f"sudo chmod 644 {CF_CRON_FILE}")
+
+    print_success(f"Cron job created at {CF_CRON_FILE}")
+    print_success("DNS update will run every 5 minutes as root")
+
+
+if __name__ == "__main__":
+    main()
