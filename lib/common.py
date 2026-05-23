@@ -39,3 +39,44 @@ def _ensure_source_env() -> None:
         SERVER_ENV_PATH.chmod(0o755)
 
 
+def add_env_val(env_key: str, env_val: str, description: str) -> None:
+    """Append export statements to ~/usr-bin/source-env,
+    creating it if needed."""
+    _ensure_source_env()
+    export_line = f"# {description}\nexport {env_key}={env_val}"
+    with open(SERVER_ENV_PATH, "a") as f:
+        f.write(f"\n{export_line}\n")
+    print_info(f"Adding {env_key} to source env")
+    print_info(f"Description: {description}")
+    print_warning(
+        """Make sure current command is ran with `&& source source-env`
+        or run `source source-env` after
+        for changes to take affect in current sesion"""
+    )
+
+
+def add_env_cmd(cmd: str, description: str) -> None:
+    _ensure_source_env()
+    cmd_line = f"# {description}\n{cmd}"
+    with open(SERVER_ENV_PATH, "a") as f:
+        f.write(f"\n{cmd_line}\n")
+    print_info(f"Adding {cmd} to source env")
+    print_info(f"Description: {description}")
+    print_warning(
+        """Make sure current command is ran with `&& source source-env`
+        or run `source source-env` after
+        for changes to take affect in current sesion"""
+    )
+
+
+def ensure_dir(path: str) -> Path:
+    try:
+        path_obj = Path(path)
+        if not path_obj.exists():
+            path_obj.mkdir(parents=True, exist_ok=True)
+            print_success(f"Directory created: {path}")
+    except Exception:
+        print_error(f"Failed to create directory {path}")
+        sys.exit(1)
+
+    return path_obj
