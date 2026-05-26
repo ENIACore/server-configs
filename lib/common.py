@@ -80,3 +80,45 @@ def ensure_dir(path: str) -> Path:
         sys.exit(1)
 
     return path_obj
+
+
+def clear_env() -> None:
+    """Delete the source-env file if it exists."""
+    if SERVER_ENV_PATH.exists():
+        SERVER_ENV_PATH.unlink()
+
+
+def run_cmd(cmd: str, capture_output: bool = False) -> CompletedProcess:
+    """Run a shell command, printing it first. Raises on non-zero exit."""
+    import subprocess
+
+    print_step(f"Running: {cmd}")
+    result = subprocess.run(
+        cmd,
+        shell=True,
+        capture_output=capture_output,
+        text=True,
+    )
+    if result.returncode == 0:
+        if not capture_output and result.stdout:
+            print_success(result.stdout.strip())
+        else:
+            print_success("Command completed successfully")
+    else:
+        err = (
+            result.stderr.strip() if capture_output and result.stderr else ""
+        )
+        print_error(
+            f"""Command failed (exit {result.returncode})
+            {": " + err if err else ""}"""
+        )
+        result.check_returncode()  # raises CalledProcessError
+    return result
+
+
+def copy_path(src: str | Path, dest: str | Path) -> None:
+    """Recursively copy a file or directory from src to dest.
+
+    Args:
+        src:       Source file or directory path.
+        dest:      Destination path. For directories,
