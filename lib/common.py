@@ -122,3 +122,44 @@ def copy_path(src: str | Path, dest: str | Path) -> None:
     Args:
         src:       Source file or directory path.
         dest:      Destination path. For directories,
+                   this is the target directory
+                   itself (not the parent), mirroring `cp -r src/ dest/`.
+    """
+    import shutil
+
+    src, dest = Path(src), Path(dest)
+
+    if not src.exists():
+        print_error(f"Copy failed: source does not exist: {src}")
+        sys.exit(1)
+
+    # Overwrite file/dir if it exists
+    if dest.is_dir():
+        shutil.rmtree(dest)
+    else:
+        dest.unlink(missing_ok=True)
+
+    print_step(
+        f"Copying {'directory' if src.is_dir() else 'file'}: {src} → {dest}"
+    )
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if src.is_dir():
+        shutil.copytree(src, dest)
+    else:
+        shutil.copy2(src, dest)
+
+    print_success(f"Copied: {src} → {dest}")
+
+
+def write_lines(path: str | Path, lines: list[str]) -> None:
+    """Write a list of strings to a file, one per line.
+    Overwrites the file if it already exists."""
+    path_obj = Path(path)
+    path_obj.parent.mkdir(parents=True, exist_ok=True)
+
+    if path_obj.exists():
+        path_obj.unlink()
+
+    path_obj.write_text("\n".join(lines) + "\n")
+    print_success(f"Written: {path}")
