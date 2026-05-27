@@ -1,0 +1,8 @@
+# Ignore all contents of keys directory
+keys/*
+!keys/*.template
+!keys/.gitkeep
+
+# Ignore sites enabled on server, only contain sites available
+nginx/sites-enabled/**
+
