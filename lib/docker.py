@@ -46,3 +46,27 @@ def ensure_network() -> None:
             "--subnet",
             DOCKER_NETWORK_SUBNET,
             "--gateway",
+            DOCKER_NETWORK_GATEWAY,
+            DOCKER_NETWORK_NAME,
+        ],
+        capture_output=True,
+    )
+
+    if result.returncode == 0:
+        print_success(f"Docker network '{DOCKER_NETWORK_NAME}' created")
+    else:
+        print_error(
+            f"Failed to create Docker network '{DOCKER_NETWORK_NAME}' "
+            "(subnet or gateway already in use, choose a new range)"
+        )
+        sys.exit(1)
+
+
+def run_container(
+    name: str, opts: list[str], notes: list[str] | None = None
+) -> None:
+    """Run a Docker container and print result.
+
+    Args:
+        name:  Container name (passed as --name and used in output).
+        opts:  All additional docker run args (volumes, network, restart, image, etc.).
