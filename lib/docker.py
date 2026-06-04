@@ -22,3 +22,27 @@ from formatting import (
     print_success,
 )
 
+
+def ensure_network() -> None:
+    """Ensure the Docker network exists, creating it if necessary."""
+    probe = subprocess.run(
+        ["docker", "network", "inspect", DOCKER_NETWORK_NAME],
+        capture_output=True,
+    )
+
+    if probe.returncode == 0:
+        print_info(f"Validated Docker network '{DOCKER_NETWORK_NAME}' exists")
+        return
+
+    print_step(f"Creating Docker network '{DOCKER_NETWORK_NAME}'")
+
+    result = subprocess.run(
+        [
+            "docker",
+            "network",
+            "create",
+            "--driver",
+            "bridge",
+            "--subnet",
+            DOCKER_NETWORK_SUBNET,
+            "--gateway",
