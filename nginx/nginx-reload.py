@@ -21,3 +21,25 @@ def test_config() -> bool:
     print_error(result.stderr.strip())
     return False
 
+
+def reload_nginx() -> bool:
+    result = subprocess.run(
+        ["docker", "exec", NGINX_CONTAINER_NAME, "nginx", "-s", "reload"],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode == 0:
+        print_success("Nginx reloaded successfully")
+        return True
+    print_error("Failed to reload nginx")
+    print_error(result.stderr.strip())
+    return False
+
+
+def print_health() -> None:
+    result = subprocess.run(
+        [
+            "docker",
+            "inspect",
+            "--format",
+            "{{.State.Health.Status}}",
