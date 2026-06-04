@@ -70,3 +70,27 @@ def run_container(
     Args:
         name:  Container name (passed as --name and used in output).
         opts:  All additional docker run args (volumes, network, restart, image, etc.).
+               Do not include 'docker', 'run', '-d', or '--name'.
+        notes: Optional list of follow-up info lines printed on success.
+    """
+    print_group_start(f"Starting container '{name}'")
+
+    cmd = ["docker", "run", "-d", "--name", name, *opts]
+    print_group_step(f"Running: {GREY}{' '.join(cmd)}{RESET}")
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.returncode == 0:
+        print_group_end(
+            f"Container '{name}' started successfully", success=True
+        )
+        if notes:
+            print_info("")
+            print_info("Next steps:")
+            for i, note in enumerate(notes, start=1):
+                print_info(f"{YELLOW}{i}. {note}{RESET}")
+    else:
+        err = result.stderr.strip()
+        print_group_step(err)
+        print_group_end(f"Failed to start container '{name}'", success=False)
+        sys.exit(1)
