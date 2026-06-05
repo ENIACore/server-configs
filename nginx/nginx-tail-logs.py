@@ -24,3 +24,28 @@ TAIL_LINES = 100
 def container_exists() -> bool:
     result = subprocess.run(
         ["docker", "ps", "-a", "--format", "{{.Names}}"],
+        capture_output=True,
+        text=True,
+    )
+    return NGINX_CONTAINER_NAME in result.stdout.splitlines()
+
+
+def container_running() -> bool:
+    result = subprocess.run(
+        ["docker", "ps", "--format", "{{.Names}}"],
+        capture_output=True,
+        text=True,
+    )
+    return NGINX_CONTAINER_NAME in result.stdout.splitlines()
+
+
+def logs_exist() -> bool:
+    from pathlib import Path
+
+    return Path(NGINX_ACCESS_LOG).exists() or Path(NGINX_ERROR_LOG).exists()
+
+
+def tail_logs() -> None:
+    access_label = f"{GREEN}[ACCESS]{RESET}"
+    error_label = f"{RED}[ERROR]{RESET}"
+
