@@ -49,3 +49,28 @@ def tail_logs() -> None:
     access_label = f"{GREEN}[ACCESS]{RESET}"
     error_label = f"{RED}[ERROR]{RESET}"
 
+    proc = subprocess.Popen(
+        [
+            "tail",
+            "-f",
+            "-n",
+            str(TAIL_LINES),
+            NGINX_ACCESS_LOG,
+            NGINX_ERROR_LOG,
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+    )
+
+    assert proc.stdout is not None
+    try:
+        for line in proc.stdout:
+            line = line.rstrip()
+            if line == f"==> {NGINX_ACCESS_LOG} <==":
+                print(f"\n{access_label}")
+            elif line == f"==> {NGINX_ERROR_LOG} <==":
+                print(f"\n{error_label}")
+            else:
+                print(line)
+    except KeyboardInterrupt:
