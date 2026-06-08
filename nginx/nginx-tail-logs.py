@@ -74,3 +74,29 @@ def tail_logs() -> None:
             else:
                 print(line)
     except KeyboardInterrupt:
+        proc.terminate()
+
+
+def main():
+    if not container_exists():
+        print_error(f"Container '{NGINX_CONTAINER_NAME}' not found")
+        sys.exit(1)
+
+    if not container_running():
+        print_warning(f"Container '{NGINX_CONTAINER_NAME}' is not running")
+        print_info("Showing logs from stopped container...")
+
+    if not logs_exist():
+        print_error(f"No log files found in {NGINX_LOG_DIR}")
+        sys.exit(1)
+
+    print_header("TAILING NGINX LOGS")
+    print_info(f"Log directory: {NGINX_LOG_DIR}")
+    print_info("Press Ctrl+C to stop")
+    print()
+
+    tail_logs()
+
+
+if __name__ == "__main__":
+    main()
