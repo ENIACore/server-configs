@@ -97,3 +97,52 @@ def write_jackett_config(api_key: str) -> None:
     engines_dir = JACKETT_CONFIG_PATH_IN_QBIT.rsplit("/", 1)[0]
 
     print_step(
+        "Ensuring plugin engines directory exists in qBittorrent container..."
+    )
+    result = _docker_exec(QBIT_CONTAINER_NAME, ["mkdir", "-p", engines_dir])
+    if result.returncode != 0:
+        print_error("Failed to create engines directory inside container")
+        sys.exit(1)
+
+    print_step("Writing jackett.json into qBittorrent container...")
+    result = _docker_exec(
+        QBIT_CONTAINER_NAME,
+        [
+            "sh",
+            "-c",
+            f"cat > '{JACKETT_CONFIG_PATH_IN_QBIT}' "
+            f"&& chown 1000:1000 '{JACKETT_CONFIG_PATH_IN_QBIT}' "
+            f"&& chmod 644 '{JACKETT_CONFIG_PATH_IN_QBIT}'",
+        ],
+        stdin=config_json,
+    )
+    if result.returncode != 0:
+        print_error("Failed to write jackett.json to container")
+        sys.exit(1)
+    print_success(f"Wrote {JACKETT_CONFIG_PATH_IN_QBIT}")
+
+
+def verify_config() -> None:
+    print_step("Verifying configuration...")
+    result = _docker_exec(
+        QBIT_CONTAINER_NAME, ["cat", JACKETT_CONFIG_PATH_IN_QBIT]
+    )
+    if result.returncode != 0:
+        print_error("Could not read back configuration file")
+        sys.exit(1)
+    print_success("Configuration file verified in container")
+
+
+def test_connectivity() -> None:
+    print_step("Testing connectivity from qBittorrent to Jackett...")
+
+    wget_result = _docker_exec(
+        QBIT_CONTAINER_NAME,
+        [
+            "sh",
+            "-c",
+            f"command -v wget >/dev/null && wget -qO- --timeout=5 {JACKETT_URL} >/dev/null",
+        ],
+    )
+    if wget_result.returncode == 0:
+        print_success(f"qBittorrent can reach Jackett at {JACKETT_URL}")
