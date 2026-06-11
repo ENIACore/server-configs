@@ -146,3 +146,53 @@ def test_connectivity() -> None:
     )
     if wget_result.returncode == 0:
         print_success(f"qBittorrent can reach Jackett at {JACKETT_URL}")
+        return
+
+    curl_result = _docker_exec(
+        QBIT_CONTAINER_NAME,
+        [
+            "sh",
+            "-c",
+            f"command -v curl >/dev/null && curl -sf --max-time 5 {JACKETT_URL} >/dev/null",
+        ],
+    )
+    if curl_result.returncode == 0:
+        print_success(f"qBittorrent can reach Jackett at {JACKETT_URL}")
+        return
+
+    print_warning(
+        "Could not verify connectivity to Jackett "
+        "(wget/curl unavailable, or VPN may be blocking inter-container traffic)"
+    )
+    print_warning(
+        f"If searches fail, check that the qBittorrent VPN config allows access to {JACKETT_URL}"
+    )
+
+
+def main():
+    print_header("SETTING UP JACKETT/QBITTORRENT SEARCH PLUGIN CONFIG")
+
+    media_path = require_config_value("MEDIA_SERVICES_PATH")
+    require_dir(media_path, "Media services path")
+
+    check_containers()
+
+    api_key = prompt_api_key()
+
+    write_jackett_config(api_key)
+
+    verify_config()
+
+    test_connectivity()
+
+    print_info("")
+    print_info("Next steps:")
+    print_info("1. Open the qBittorrent WebUI and go to the Search tab")
+    print_info("2. Click 'Search plugins...' and confirm Jackett is enabled")
+    print_info(
+        "3. Run a test search to verify results come back from Jackett"
+    )
+
+
+if __name__ == "__main__":
+    main()
