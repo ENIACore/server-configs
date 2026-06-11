@@ -43,3 +43,26 @@ def find_config(site_name: str) -> tuple[Path, Path]:
     sys.exit(1)
 
 
+def main():
+    print_header("ENABLING NGINX SITE")
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("site", help="Site name (without .conf)")
+    args = parser.parse_args()
+
+    src, enabled_dir = find_config(args.site)
+    dest = enabled_dir / src.name
+
+    if dest.exists() or dest.is_symlink():
+        print_error(f"'{args.site}' is already enabled at {dest}")
+        sys.exit(1)
+
+    print_step(f"Enabling {src.name}...")
+    dest.symlink_to(src)
+    print_success(f"Symlinked {src} → {dest}")
+
+    run_cmd(f"{sys.executable} /usr/local/sbin/nginx-reload")
+
+
+if __name__ == "__main__":
+    main()
