@@ -53,3 +53,58 @@
 ## About The Project
 
 Server-AIO is an all-in-one setup toolkit that turns a fresh Ubuntu Server into a repeatable self-hosted platform — in the same spirit as [nextcloud-aio](https://github.com/nextcloud/all-in-one), but for the whole server rather than a single app. One installer bootstraps the shared infrastructure (Cloudflare DNS updates, a Docker-based Nginx reverse proxy, UFW, Fail2ban, and a shared Docker network), then separate setup commands bring up individual services such as Nextcloud, Vaultwarden, and Jellyfin on top of it.
+
+Unlike a black-box AIO container, every piece here stays a plain, inspectable script and config file — nothing is hidden behind a control panel. Review and adapt the scripts for your network before exposing services to the internet.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Built With
+
+- [![Python][Python-badge]][Python-url]
+- [![Bash][Bash-badge]][Bash-url]
+- [![Docker][Docker-badge]][Docker-url]
+- [![Nginx][Nginx-badge]][Nginx-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Getting Started
+
+### Prerequisites
+
+Before running the installation script, ensure you have:
+
+- Ubuntu Server LTS
+- Root or sudo access
+- Active internet connection
+- A domain and Cloudflare API token for the included DNS automation
+- Docker for the service setup scripts
+
+### Installation
+
+Run this command in your Ubuntu terminal to start the installation:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ENIACore/server-configs/main/install.py -o /tmp/server-install.py && sudo python3 /tmp/server-install.py
+```
+
+The installer copies the available commands to `/usr/local/sbin`, collects the
+initial server configuration, and prepares Nginx templates for the configured
+domain. Run the infrastructure and service setup commands you want afterward.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## What Gets Installed
+
+Server-AIO provides setup commands for the following services and infrastructure:
+
+**Services:**
+
+- **Nextcloud** - Self-hosted file sync and share platform
+- **Vaultwarden** - Lightweight Bitwarden server implementation
+- **Jellyfin** - Media server for your personal media collection
+- **qBittorrent** - Torrent client with built-in WireGuard VPN (via the hotio image)
+- **Jackett** - Indexer proxy for torrent trackers
+- **jfa-go** - Jellyfin account management
+- **Minecraft** - Fabric server with Lithium
+- **PostgreSQL** and a personal-site container
+
