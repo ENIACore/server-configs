@@ -108,3 +108,59 @@ Server-AIO provides setup commands for the following services and infrastructure
 - **Minecraft** - Fabric server with Lithium
 - **PostgreSQL** and a personal-site container
 
+**Security & Infrastructure:**
+
+- **Nginx** - Reverse proxy with SSL termination
+- **Cloudflare DNS** - Dynamic DNS updates for root and wildcard records
+- **Fail2ban** - Intrusion prevention system
+- **UFW Firewall** - Uncomplicated firewall configuration
+- **Docker networking** - Shared internal network for service-to-service communication
+
+Useful operational commands include `nginx-enable`, `nginx-disable`,
+`scan-ports`, `docker-network-inspect`, `docker-system-prune`,
+`add-healthcheck-cron`, `mask-sleep`, and `unmask-sleep`.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Demo
+
+[![Server-AIO walkthrough](https://img.youtube.com/vi/xd_rBWV8tak/maxresdefault.jpg)](https://youtu.be/xd_rBWV8tak)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Screenshots
+
+### Initial installation
+
+![Example initial installation output](images/installation-example.png)
+
+### Cloudflare DNS setup
+
+![Example Cloudflare setup output](images/cloudflare-setup-example.png)
+
+### Reverse proxy setup
+
+![Example reverse proxy setup output](images/reverse-proxy-example.png)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Releases
+
+Tagged releases (`vMAJOR.MINOR.PATCH`) are cut from `main` and listed on the
+[Releases page][release-url]. See [CHANGELOG.md](CHANGELOG.md) for a
+per-version summary of what changed. Between releases, `main` tracks the
+maintainer's live server configuration directly.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Roadmap
+
+- [ ] Add support for additional Linux distributions
+- [ ] Implement automated backup solutions
+- [ ] Add monitoring and alerting system
+- [ ] Create web-based configuration interface
+- [ ] Add support for additional self-hosted services
+
+See the [open issues](https://github.com/ENIACore/server-configs/issues) for a full list of proposed features and known issues.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
