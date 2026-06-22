@@ -164,3 +164,58 @@ maintainer's live server configuration directly.
 See the [open issues](https://github.com/ENIACore/server-configs/issues) for a full list of proposed features and known issues.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Top contributors:
+
+<a href="https://github.com/ENIACore/server-configs/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ENIACore/server-configs" alt="contrib.rocks image" />
+</a>
+
+## License
+
+Distributed under the MIT License. See [LICENSE.md](LICENSE.md) for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contact
+
+Project Link: [https://github.com/ENIACore/server-configs](https://github.com/ENIACore/server-configs)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- MARKDOWN LINKS & IMAGES -->
+
+[contributors-shield]: https://img.shields.io/github/contributors/ENIACore/server-configs.svg?style=for-the-badge
+[contributors-url]: https://github.com/ENIACore/server-configs/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/ENIACore/server-configs.svg?style=for-the-badge
+[forks-url]: https://github.com/ENIACore/server-configs/network/members
+[stars-shield]: https://img.shields.io/github/stars/ENIACore/server-configs.svg?style=for-the-badge
+[stars-url]: https://github.com/ENIACore/server-configs/stargazers
+[issues-shield]: https://img.shields.io/github/issues/ENIACore/server-configs.svg?style=for-the-badge
+[issues-url]: https://github.com/ENIACore/server-configs/issues
+[license-shield]: https://img.shields.io/github/license/ENIACore/server-configs.svg?style=for-the-badge
+[license-url]: https://github.com/ENIACore/server-configs/blob/main/LICENSE.md
+[release-shield]: https://img.shields.io/github/v/release/ENIACore/server-configs.svg?style=for-the-badge
+[release-url]: https://github.com/ENIACore/server-configs/releases
+[Python-badge]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
+[Python-url]: https://www.python.org/
+[Bash-badge]: https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white
+[Bash-url]: https://www.gnu.org/software/bash/
+[Docker-badge]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
+[Docker-url]: https://www.docker.com/
+[Nginx-badge]: https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white
+[Nginx-url]: https://nginx.org/
