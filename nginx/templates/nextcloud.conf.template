@@ -18,3 +18,22 @@ server {
     location /robots.txt { return 200 "User-agent: *\nDisallow: /\n"; }
 
     # Global settings for this server
+    client_max_body_size 0;          # Allow unlimited upload size for Nextcloud
+    client_body_buffer_size 512k;    # Memory buffer for uploads before using disk
+
+    location ^~ /cool/ {
+        proxy_pass http://nextcloud-aio-apache:11000;
+        include /etc/nginx/snippets/ws-proxy-params.conf;
+    }
+
+    location ^~ /push/ws {
+        proxy_pass http://nextcloud-aio-apache:11000;
+        include /etc/nginx/snippets/ws-proxy-params.conf;
+    }
+    
+    location / {
+        proxy_pass http://nextcloud-aio-apache:11000;
+        include /etc/nginx/snippets/http-proxy-params.conf;
+    }
+
+}
