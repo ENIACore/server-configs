@@ -1,0 +1,12 @@
+# Explicit default server for unmatched hostnames on 443.
+# Without this, nginx falls back to whichever vhost happens to be first
+# in sites-enabled for any Host header that doesn't match a real
+# server_name (e.g. an unenabled/typo'd subdomain), silently serving
+# that service's content under the wrong hostname instead of erroring.
+#
+# Reuses the same wildcard cert every other vhost depends on — it's
+# already guaranteed to exist and already mounted into the nginx
+# container, unlike the host-OS snakeoil cert (not mounted, don't use).
+server {
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
