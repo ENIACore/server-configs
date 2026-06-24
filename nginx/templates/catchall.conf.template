@@ -10,3 +10,16 @@
 server {
     listen 443 ssl default_server;
     listen [::]:443 ssl default_server;
+    http2 on;
+    server_name _;
+
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    include /etc/nginx/snippets/ssl-params.conf;
+    include /etc/nginx/snippets/security.conf;
+    include /etc/nginx/snippets/block-exploits.conf;
+
+    location / {
+        return 444;
+    }
+}
