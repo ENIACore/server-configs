@@ -22,3 +22,26 @@ IGNORE = {
     # "setup",
     "install",
     "install-scripts",
+}
+
+
+def create_dirs():
+    SBIN.mkdir(parents=True, exist_ok=True)
+    LIB_DIR.mkdir(parents=True, exist_ok=True)
+    init = LIB_DIR / "init.py"
+    if not init.exists():
+        init.touch()
+
+
+def copy_scripts():
+    lib_prefix = SCRIPTS_DIR / "lib"
+
+    for script in SCRIPTS_DIR.rglob("*.py"):
+        if script.stem in IGNORE:
+            continue
+
+        try:
+            script.relative_to(lib_prefix)
+            dest = LIB_DIR / script.name
+        except ValueError:
+            dest = SBIN / script.stem
