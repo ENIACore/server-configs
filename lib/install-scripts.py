@@ -45,3 +45,27 @@ def copy_scripts():
             dest = LIB_DIR / script.name
         except ValueError:
             dest = SBIN / script.stem
+
+        dest.unlink(missing_ok=True)
+        shutil.copy2(str(script), str(dest))
+        dest.chmod(0o755)
+
+
+def add_to_path_config(rc_file: Path):
+    rc_text = rc_file.read_text() if rc_file.exists() else ""
+    if "/usr/local/sbin" in rc_text:
+        return
+    with rc_file.open("a") as f:
+        f.write(PATH_BLOCK)
+
+
+def main():
+    create_dirs()
+    copy_scripts()
+    add_to_path_config(BASHRC)
+    add_to_path_config(ZSHRC)
+    os.environ["PATH"] = f"{SBIN}:{os.environ.get('PATH', '')}"
+
+
+if __name__ == "__main__":
+    main()
