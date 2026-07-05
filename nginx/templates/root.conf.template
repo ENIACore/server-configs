@@ -12,3 +12,17 @@ server {
     include /etc/nginx/snippets/security.conf;
     include /etc/nginx/snippets/block-exploits.conf;
 
+    # Next.js static assets with aggressive caching
+    location /_next/static/ {
+        proxy_pass http://server-personal-site:3000;
+        include /etc/nginx/snippets/http-proxy-params.conf;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    location / {
+        proxy_pass http://server-personal-site:3000;
+        include /etc/nginx/snippets/http-proxy-params.conf;
+    }
+}
