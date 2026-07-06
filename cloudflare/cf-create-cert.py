@@ -43,3 +43,26 @@ def main():
         f" --dns-cloudflare"
         f" --dns-cloudflare-credentials {CF_INI_FILE}"
         f" --dns-cloudflare-propagation-seconds {CF_PROPAGATION_SECONDS}"
+        f" -d {wildcard_domain}"
+        f" -d {root_domain}"
+    )
+
+    if args.dry_run:
+        certbot_cmd += " --dry-run"
+
+    run_cmd(certbot_cmd)
+    print_success("Certificate created successfully")
+
+    print_step("Verifying certbot renewal timer is active...")
+    run_cmd("sudo systemctl status certbot.timer")
+
+    print_step("Verifying certbot renewal functions...")
+    run_cmd("sudo certbot renew --dry-run")
+
+    print_success("Certificate renewal test passed")
+    print_success("Certificate setup complete")
+
+
+if __name__ == "__main__":
+    ensure_packages(["certbot", "python3-certbot-dns-cloudflare"])
+    main()
