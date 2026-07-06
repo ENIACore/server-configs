@@ -92,3 +92,34 @@ def log(message: str = "") -> bool:
 
     if _SERVER_LOG_COUNT % 15 == 0:
         _rotate_log()
+
+    return True
+
+
+def get_log_file() -> str:
+    """Get the current log file path.
+
+    Returns:
+        The log file path as a string, or empty string if not initialized
+    """
+    return str(_SERVER_LOG_FILE) if _SERVER_LOG_FILE else ""
+
+
+# ------------------------------------------------------------------------------
+# Private Functions
+# ------------------------------------------------------------------------------
+
+
+def _rotate_log() -> None:
+    """Rotate the log file if it exceeds the maximum line count.
+    Keeps only the most recent _SERVER_MAX_LOG_LINES lines.
+    """
+    if not _SERVER_LOG_FILE or not _SERVER_LOG_FILE.exists():
+        return
+
+    lines = _SERVER_LOG_FILE.read_text().splitlines()
+    if len(lines) > _SERVER_MAX_LOG_LINES:
+        trimmed = lines[-_SERVER_MAX_LOG_LINES:]
+        tmp = _SERVER_LOG_FILE.with_suffix(".tmp")
+        tmp.write_text("\n".join(trimmed) + "\n")
+        tmp.replace(_SERVER_LOG_FILE)
