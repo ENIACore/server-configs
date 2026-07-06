@@ -60,3 +60,35 @@ def init_logger(log_file: str, max_lines: int = 1000) -> bool:
     _SERVER_LOG_FILE = log_path
     _SERVER_MAX_LOG_LINES = max_lines
     _SERVER_LOG_COUNT = 0
+    _SERVER_LOG_INITIALIZED = True
+    return True
+
+
+def log(message: str = "") -> bool:
+    """Log a message with timestamp to both stdout and the log file.
+
+    Args:
+        message: Message to log
+
+    Returns:
+        True on success, False if logger not initialized
+    """
+    global _SERVER_LOG_COUNT
+
+    if not _SERVER_LOG_INITIALIZED:
+        print_error("ERROR: Logger not initialized. Call init_logger first.")
+        return False
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    log_entry = f"[{timestamp}] {message}"
+
+    print_info(log_entry)
+
+    assert _SERVER_LOG_FILE is not None
+    with open(_SERVER_LOG_FILE, "a") as f:
+        f.write(log_entry + "\n")
+
+    _SERVER_LOG_COUNT += 1
+
+    if _SERVER_LOG_COUNT % 15 == 0:
+        _rotate_log()
