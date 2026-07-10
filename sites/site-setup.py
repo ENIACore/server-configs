@@ -43,3 +43,25 @@ def main():
 
     ensure_network()
 
+    run_cmd("docker pull eniacore/personal-site:latest")
+
+    run_container(
+        name="server-personal-site",
+        opts=[
+            "--network",
+            DOCKER_NETWORK_NAME,
+            "--restart",
+            "unless-stopped",
+            "-e",
+            f"PAYLOAD_SECRET={payload_secret}",
+            "-e",
+            f"DATABASE_URL={pg_conn_str}",
+            "-v",
+            "server-personal-site-media:/app/media",
+            "eniacore/personal-site:latest",
+        ],
+    )
+
+
+if __name__ == "__main__":
+    main()
