@@ -16,3 +16,21 @@ def inspect_docker_network(container_name: str) -> None:
     )
 
     if result.returncode != 0:
+        print_error(f"Failed to inspect container '{container_name}'")
+        print_error(result.stderr.strip())
+        sys.exit(1)
+
+    try:
+        data = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        print_error("Failed to parse docker inspect output")
+        sys.exit(1)
+
+    if not data:
+        print_error(f"No data returned for container '{container_name}'")
+        sys.exit(1)
+
+    networks = data[0].get("NetworkSettings", {}).get("Networks", {})
+
+    if not networks:
+        print_info(f"No networks found for container '{container_name}'")
