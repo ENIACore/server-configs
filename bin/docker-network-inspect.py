@@ -34,3 +34,21 @@ def inspect_docker_network(container_name: str) -> None:
 
     if not networks:
         print_info(f"No networks found for container '{container_name}'")
+        return
+
+    print_info(f"Networks for container '{container_name}':")
+    for net_name, config in networks.items():
+        ip = config.get("IPAddress", "N/A")
+        print_success(f"  {net_name}: {ip}")
+
+
+def main() -> None:
+    container_name = get_input("Enter name of container to inspect")
+    if not container_name:
+        print_error("Container name cannot be empty")
+        sys.exit(1)
+    inspect_docker_network(container_name)
+
+
+if __name__ == "__main__":
+    main()
