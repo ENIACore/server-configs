@@ -41,3 +41,25 @@ project's scope.
 
 ## Pull requests
 
+1. Create a branch from `main`: `git checkout -b feature/short-description`.
+2. Keep changes focused — one logical change per PR.
+3. Make sure no secrets, real domains, IP addresses, or credentials are
+   included in diffs (check templates under `keys/` and `nginx/templates/`
+   carefully).
+4. Fill out the pull request template completely.
+5. Ensure `ruff check .` passes with no new warnings.
+6. A maintainer will review and may request changes before merging.
+
+## Style guidelines
+
+- Prefer the shared helpers in `lib/` (`common.py`, `checks.py`, `config.py`,
+  `logger.py`) over duplicating logic in per-service scripts.
+- Keep config templates (`*.template`) free of real secrets — use
+  placeholders consistent with existing templates.
+- Write clear, imperative commit messages (e.g. "Add healthcheck cron
+  script" rather than "Added stuff").
+
+## Questions
+
+Open a [discussion](../../discussions) or issue if you're unsure where a
+change belongs. Thanks again for contributing!
