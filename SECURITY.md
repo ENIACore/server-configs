@@ -17,3 +17,23 @@ receive backported fixes.
 ## Reporting a Vulnerability
 
 If you discover a security vulnerability in these scripts or configurations
+(e.g. an Nginx misconfiguration that exposes internal services, a script
+that mishandles secrets, an insecure default, or a privilege escalation
+path), please **do not open a public issue**.
+
+Instead, report it privately using one of the following methods:
+
+1. **Preferred:** Open a [GitHub Security Advisory](../../security/advisories/new)
+   for this repository.
+2. Contact the maintainer directly via the email listed on
+   [@ENIACore's GitHub profile](https://github.com/ENIACore).
+
+Please include:
+
+- A description of the vulnerability and its potential impact
+- Steps to reproduce or proof-of-concept, if available
+- Any suggested remediation
+
+## What to expect
+
+- You will receive an acknowledgment within a few days of your report.
