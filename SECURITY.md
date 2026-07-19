@@ -37,3 +37,22 @@ Please include:
 ## What to expect
 
 - You will receive an acknowledgment within a few days of your report.
+- The maintainer will investigate and, if confirmed, work on a fix and
+  coordinate a disclosure timeline with you.
+- Credit will be given in the fix's commit message/changelog if desired.
+
+## Scope
+
+Because this repo configures a real, internet-facing personal server, please
+report issues related to:
+
+- Nginx/reverse proxy misconfigurations (e.g. missing rate limits, exposed
+  admin panels, weak TLS settings)
+- Fail2ban/UFW rules that fail open
+- Scripts that could leak secrets, API keys, or credentials
+- Privilege escalation or insecure file permissions introduced by setup
+  scripts
+
+Out of scope: vulnerabilities in third-party software this repo merely
+configures (e.g. Nextcloud, Vaultwarden, Jellyfin itself) — please report
+those to the respective upstream projects.
