@@ -16,3 +16,21 @@ PG_DATA_PATH = "/var/lib/postgresql"
 
 def main():
     print_header("SETTING UP POSTGRES DATABASE")
+
+    require_server_user()
+
+    prompt_and_save(
+        "PG_PASSWORD",
+        "Enter the PostgreSQL superuser password",
+        secret=True,
+    )
+    pg_password = require_config_value("PG_PASSWORD")
+
+    ensure_network()
+
+    run_container(
+        name=PG_CONTAINER_NAME,
+        opts=[
+            "--network",
+            DOCKER_NETWORK_NAME,
+            "-e",
