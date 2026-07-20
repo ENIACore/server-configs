@@ -73,3 +73,40 @@ def show_summary() -> None:
     print_step("Port Usage Summary")
 
     def extract_ports(output: str) -> list[str]:
+        ports = []
+        for line in output.splitlines()[1:]:
+            parts = line.split()
+            if len(parts) >= 5:
+                addr = parts[4]
+                port = addr.rsplit(":", 1)[-1]
+                if port.isdigit():
+                    ports.append(port)
+        return ports
+
+    tcp_out = run_ss(["-tlpn"])
+    udp_out = run_ss(["-ulpn"])
+
+    tcp_counts = Counter(extract_ports(tcp_out))
+    udp_counts = Counter(extract_ports(udp_out))
+
+    print_info("TCP Listening Ports:")
+    for port, count in sorted(tcp_counts.items(), key=lambda x: -x[1]):
+        print(f"  {count:>4}  {port}")
+
+    print_info("UDP Listening Ports:")
+    for port, count in sorted(udp_counts.items(), key=lambda x: -x[1]):
+        print(f"  {count:>4}  {port}")
+
+
+MENU_OPTIONS = {
+    "1": ("Show all listening ports (TCP & UDP)", show_all_ports),
+    "2": ("Show only TCP listening ports", show_tcp_ports),
+    "3": ("Show only UDP listening ports", show_udp_ports),
+    "4": ("Search for specific port", search_port),
+    "5": ("Show all listening processes", show_listening_processes),
+    "6": ("Show established connections", show_established),
+    "7": ("Show port summary (count by service)", show_summary),
+    "8": ("Exit", None),
+}
+
+
