@@ -12,3 +12,17 @@ def prune_docker_system() -> None:
     result = subprocess.run(
         ["docker", "system", "prune", "-a", "-f"],
         text=True,
+    )
+    if result.returncode == 0:
+        print_success("Docker system pruned successfully")
+    else:
+        print_error("Docker system prune failed")
+        sys.exit(1)
+
+
+def main() -> None:
+    prune_docker_system()
+
+
+if __name__ == "__main__":
+    main()
