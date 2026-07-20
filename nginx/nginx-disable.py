@@ -17,3 +17,23 @@ from formatting import (
 
 ENABLED_DIRS = [
     NGINX_CONFIG_PATH / "sites-enabled",
+    NGINX_CONFIG_PATH / "streams-enabled",
+]
+
+
+def find_enabled(site_name: str) -> Path:
+    """Find sitename.conf in sites-enabled or streams-enabled.
+    Returns the path or exits with error."""
+    filename = f"{site_name}.conf"
+
+    for enabled_dir in ENABLED_DIRS:
+        candidate = enabled_dir / filename
+        if candidate.exists() or candidate.is_symlink():
+            print_info(f"Found {filename} in {enabled_dir.name}")
+            return candidate
+
+    print_error(
+        f"Config '{filename}' not found in sites-enabled or streams-enabled"
+    )
+    sys.exit(1)
+
