@@ -110,3 +110,41 @@ MENU_OPTIONS = {
 }
 
 
+def show_menu() -> None:
+    print_header("Ubuntu Port Monitor Tool")
+    for key, (label, _) in MENU_OPTIONS.items():
+        print(f"  {key}) {label}")
+    print()
+
+
+def check_ss_available() -> None:
+    result = subprocess.run(["which", "ss"], capture_output=True)
+    if result.returncode != 0:
+        print_error("'ss' command not found. Please install iproute2 package.")
+        print_error("sudo apt update && sudo apt install iproute2")
+        sys.exit(1)
+
+
+def main() -> None:
+    check_ss_available()
+
+    while True:
+        show_menu()
+        choice = get_input("Choose an option [1-8]")
+
+        if choice not in MENU_OPTIONS:
+            print_error("Invalid option. Please choose 1-8.")
+            continue
+
+        _, fn = MENU_OPTIONS[choice]
+
+        if fn is None:
+            print_info("Goodbye!")
+            sys.exit(0)
+
+        fn()
+        input("\nPress Enter to continue...")
+
+
+if __name__ == "__main__":
+    main()
