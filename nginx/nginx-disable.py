@@ -37,3 +37,22 @@ def find_enabled(site_name: str) -> Path:
     )
     sys.exit(1)
 
+
+def main():
+    print_header("DISABLING NGINX SITE")
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("site", help="Site name (without .conf)")
+    args = parser.parse_args()
+
+    target = find_enabled(args.site)
+
+    print_step(f"Disabling {target.name}...")
+    target.unlink()
+    print_success(f"Removed {target}")
+
+    run_cmd(f"{sys.executable} /usr/local/sbin/nginx-reload")
+
+
+if __name__ == "__main__":
+    main()
