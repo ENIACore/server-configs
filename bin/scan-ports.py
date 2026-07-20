@@ -36,3 +36,40 @@ def show_udp_ports() -> None:
     print_step("UDP Listening Ports")
     print(run_ss(["-ulpn"]))
 
+
+def search_port() -> None:
+    port = get_input("Enter port number to search for")
+    if not port.isdigit():
+        print_error("Invalid port number. Please enter a numeric value.")
+        return
+
+    print_step(f"Connections on Port {port}")
+    output = run_ss(["-tulpn"])
+    matches = [line for line in output.splitlines() if f":{port}" in line]
+
+    if matches:
+        print("\n".join(matches))
+    else:
+        print_warning(f"No connections found on port {port}")
+
+
+def show_listening_processes() -> None:
+    print_step("Processes Using Ports")
+    output = run_ss(["-tulpn"])
+    lines = [line for line in output.splitlines() if "LISTEN" in line]
+    print("\n".join(lines) if lines else "No listening processes found")
+
+
+def show_established() -> None:
+    print_step("Established TCP Connections")
+    output = run_ss(["-tuln"])
+    lines = [line for line in output.splitlines() if "ESTAB" in line]
+    print("\n".join(lines) if lines else "No established connections found")
+
+
+def show_summary() -> None:
+    from collections import Counter
+
+    print_step("Port Usage Summary")
+
+    def extract_ports(output: str) -> list[str]:
