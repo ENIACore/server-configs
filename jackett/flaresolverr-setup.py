@@ -19,3 +19,24 @@ def main():
 
     run_container(
         name="flaresolverr",
+        opts=[
+            "--network",
+            DOCKER_NETWORK_NAME,
+            "-e",
+            "LOG_LEVEL=info",
+            "-e",
+            "TZ=Etc/UTC",
+            "--restart",
+            "unless-stopped",
+            "ghcr.io/flaresolverr/flaresolverr:latest",
+        ],
+        notes=[
+            f"FlareSolverr is accessible to other containers on {DOCKER_NETWORK_NAME} at http://flaresolverr:8191",
+            "In Jackett, set the FlareSolverr API URL to http://flaresolverr:8191",
+            "Test connectivity with: curl http://flaresolverr:8191/v1",
+        ],
+    )
+
+
+if __name__ == "__main__":
+    main()
