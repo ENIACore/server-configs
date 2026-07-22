@@ -34,3 +34,21 @@ def main():
             "--network",
             DOCKER_NETWORK_NAME,
             "-e",
+            f"POSTGRES_PASSWORD={pg_password}",
+            "-v",
+            f"{PG_DATA_VOLUME}:{PG_DATA_PATH}",
+            "--restart",
+            "unless-stopped",
+            PG_IMAGE,
+        ],
+        notes=[
+            f"PostgreSQL is available to containers on '{DOCKER_NETWORK_NAME}' at port 5432",
+            f"Data is persisted in Docker volume '{PG_DATA_VOLUME}'",
+        ],
+    )
+
+    print_success("Postgres setup complete")
+
+
+if __name__ == "__main__":
+    main()
