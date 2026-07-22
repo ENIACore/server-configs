@@ -42,3 +42,25 @@ def main():
             "APACHE_PORT=11000",
             "--env",
             "APACHE_IP_BINDING=127.0.0.1",
+            "--env",
+            f"APACHE_ADDITIONAL_NETWORK={DOCKER_NETWORK_NAME}",
+            "--env",
+            "SKIP_DOMAIN_VALIDATION=true",
+            "--env",
+            f"NEXTCLOUD_DATADIR={nextcloud_data_dir}",
+            "--volume",
+            "nextcloud_aio_mastercontainer:/mnt/docker-aio-config",
+            "--volume",
+            "/var/run/docker.sock:/var/run/docker.sock:ro",
+            "ghcr.io/nextcloud-releases/all-in-one:latest",
+        ],
+        notes=[
+            "Enable the 'nextcloud-master' nginx site (nginx-enable nextcloud-master) to reach the AIO admin interface at https://nextcloud-master.<domain>",
+            "Complete the initial setup through the web interface",
+            f"Data will be stored in {nextcloud_data_dir}",
+        ],
+    )
+
+
+if __name__ == "__main__":
+    main()
