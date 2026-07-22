@@ -80,3 +80,44 @@ def _update_record(
     )
     return bool(resp.get("success"))
 
+
+def main():
+    print_header("UPDATING DNS")
+
+    require_server_user()
+
+    api_key = require_config_value("CF_API_KEY")
+    root_domain = require_config_value("ROOT_DOMAIN")
+    wildcard_domain = require_config_value("WILDCARD_DOMAIN")
+    cf_log_dir = require_config_value("CF_LOG_DIR")
+
+    ensure_dir(cf_log_dir)
+    init_logger(f"{cf_log_dir}/{CF_LOG_FILE}", CF_LOG_MAX_LINES)
+
+    log("Detecting public IPv4 address...")
+    public_ip = _get_public_ipv4()
+    if not public_ip:
+        print_error("Could not determine public IP address")
+        sys.exit(1)
+    log(f"Current IPv4 address: {public_ip}")
+
+    log(f"Retrieving Zone ID for {root_domain}...")
+    zone_resp = _cf_request("GET", f"/zones?name={root_domain}", api_key)
+    results = zone_resp.get("result") or []
+    zone_id = results[0].get("id", "") if results else ""
+    if not zone_id:
+        log(f"ERROR: Could not get Zone ID for {root_domain}")
+        sys.exit(1)
+    log(f"Zone ID: {zone_id}")
+
+    log("Retrieving DNS record IDs...")
+    root_record_id = _get_record_id(zone_id, root_domain, api_key)
+    wildcard_record_id = _get_record_id(zone_id, wildcard_domain, api_key)
+
+    if not root_record_id:
+        log(f"ERROR: Could not get Record ID for {root_domain}")
+        sys.exit(1)
+    if not wildcard_record_id:
+        log(f"ERROR: Could not get Record ID for {wildcard_domain}")
+        sys.exit(1)
+
