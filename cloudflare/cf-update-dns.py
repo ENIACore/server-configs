@@ -121,3 +121,44 @@ def main():
         log(f"ERROR: Could not get Record ID for {wildcard_domain}")
         sys.exit(1)
 
+    log(f"Root Record ID: {root_record_id}")
+    log(f"Wildcard Record ID: {wildcard_record_id}")
+
+    log(f"Updating A record for {root_domain} -> {public_ip}")
+    if _update_record(
+        zone_id, root_record_id, root_domain, public_ip, True, api_key
+    ):
+        log(f"SUCCESS: Updated {root_domain} to {public_ip}")
+    else:
+        log(f"ERROR: Failed to update {root_domain}")
+        sys.exit(1)
+
+    log(f"Updating A record for {wildcard_domain} -> {public_ip}")
+    if _update_record(
+        zone_id, wildcard_record_id, wildcard_domain, public_ip, True, api_key
+    ):
+        log(f"SUCCESS: Updated {wildcard_domain} to {public_ip}")
+    else:
+        log(f"ERROR: Failed to update {wildcard_domain}")
+        sys.exit(1)
+
+    mc_domain = f"mc.{root_domain}"
+    log(f"Retrieving DNS record ID for {mc_domain}...")
+    mc_record_id = _get_record_id(zone_id, mc_domain, api_key)
+
+    if not mc_record_id:
+        log(f"WARNING: Could not get Record ID for {mc_domain} (skipping)")
+    else:
+        log(f"Updating A record for {mc_domain} -> {public_ip}")
+        if _update_record(
+            zone_id, mc_record_id, mc_domain, public_ip, False, api_key
+        ):
+            log(f"SUCCESS: Updated {mc_domain} to {public_ip}")
+        else:
+            log(f"ERROR: Failed to update {mc_domain}")
+
+    log("DNS Update Complete")
+
+
+if __name__ == "__main__":
+    main()
