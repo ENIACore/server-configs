@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/ENIACore/server-configs/security/advisories/new
+    about: Please report security vulnerabilities privately instead of opening a public issue.
+  - name: Ask a question / discuss
+    url: https://github.com/ENIACore/server-configs/discussions
+    about: For general questions or setup help, please use Discussions instead of an issue.
