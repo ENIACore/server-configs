@@ -1,0 +1,7 @@
+# Media Library Manager tool configuration variables
+[
+mlm
+]
+movie_path = "<value>"
+show_path = "<value>"
+manager_path = "<value>"
