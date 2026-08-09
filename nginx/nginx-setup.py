@@ -55,3 +55,32 @@ def main():
             f"{NGINX_CONFIG_PATH}/snippets:/etc/nginx/snippets:ro",
             "-v",
             f"{NGINX_CONFIG_PATH}/sites-available:/etc/nginx/sites-available:ro",
+            "-v",
+            f"{NGINX_CONFIG_PATH}/streams-available:/etc/nginx/streams-available:ro",
+            "-v",
+            f"{NGINX_CONFIG_PATH}/sites-enabled:/etc/nginx/sites-enabled:ro",
+            "-v",
+            f"{NGINX_CONFIG_PATH}/streams-enabled:/etc/nginx/streams-enabled:ro",
+            "-v",
+            "/etc/letsencrypt:/etc/letsencrypt:ro",
+            "-v",
+            f"{NGINX_LOG_DIR}:/var/log/nginx:rw",
+            "-v",
+            f"{NGINX_VAR_DIR}:/var/www:ro",
+            "--tmpfs",
+            "/var/cache/nginx:rw,noexec,nosuid,size=100m",
+            "--tmpfs",
+            "/var/run:rw,noexec,nosuid,size=10m",
+            "--health-cmd=nginx -t",
+            "--health-interval=30s",
+            "--health-timeout=3s",
+            "--health-retries=3",
+            "--health-start-period=30s",
+            "nginx:latest",
+        ],
+        notes=[],
+    )
+
+
+if __name__ == "__main__":
+    main()
