@@ -27,3 +27,31 @@ def main():
     )
 
     print_step("Processing nginx templates...")
+
+    print_step(f"Creating nginx log directory at {NGINX_LOG_DIR}...")
+    ensure_dir(NGINX_LOG_DIR)
+
+    ensure_network()
+    run_container(
+        name="server-proxy",
+        opts=[
+            "--restart",
+            "unless-stopped",
+            "--network",
+            DOCKER_NETWORK_NAME,
+            "--ip",
+            NGINX_CONTAINER_IP,
+            "-p",
+            "80:80",
+            "-p",
+            "443:443",
+            "-p",
+            "25565:25565",
+            "-v",
+            f"{NGINX_CONFIG_PATH}/conf/nginx.conf:/etc/nginx/nginx.conf:ro",
+            "-v",
+            f"{NGINX_CONFIG_PATH}/conf.d:/etc/nginx/conf.d:ro",
+            "-v",
+            f"{NGINX_CONFIG_PATH}/snippets:/etc/nginx/snippets:ro",
+            "-v",
+            f"{NGINX_CONFIG_PATH}/sites-available:/etc/nginx/sites-available:ro",
