@@ -20,3 +20,24 @@ def main():
     root_domain = require_config_value("ROOT_DOMAIN")
 
     require_dir(media_path, "Media services path")
+
+    jackett_config_dir = f"{media_path}/jackett/config"
+    jackett_downloads_dir = f"{media_path}/qbit-data/jackett/downloads"
+
+    print_step("Creating Jackett directories...")
+    ensure_dir(jackett_config_dir)
+    ensure_dir(jackett_downloads_dir)
+
+    ensure_network()
+
+    run_container(
+        name="jackett",
+        opts=[
+            "--hostname",
+            "jackett.internal",
+            "--network",
+            DOCKER_NETWORK_NAME,
+            "-e",
+            "PUID=1000",
+            "-e",
+            "PGID=1000",
