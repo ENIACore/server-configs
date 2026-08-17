@@ -47,3 +47,27 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs/output
+      description: Paste relevant logs or terminal output. Redact secrets/domains/IPs.
+      render: shell
+
+  - type: input
+    id: os
+    attributes:
+      label: OS / distro version
+      placeholder: e.g. Ubuntu Server 24.04 LTS
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I have removed any secrets, domains, or IP addresses from this report
+          required: true
+        - label: I have searched existing issues and this is not a duplicate
+          required: true
