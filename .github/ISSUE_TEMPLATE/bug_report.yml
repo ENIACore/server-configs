@@ -1,0 +1,24 @@
+name: Bug report
+description: Report a problem with a setup script or configuration
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the
+        details below. **Do not include real domains, IP addresses,
+        credentials, or API keys** — redact them before submitting.
+
+  - type: input
+    id: component
+    attributes:
+      label: Affected script/component
+      description: Which file or service is affected? (e.g. `nginx/nginx-setup.py`, `f2b/f2b-reload.py`)
+      placeholder: path/to/file.py
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
