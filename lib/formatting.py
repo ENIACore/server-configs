@@ -23,3 +23,28 @@ def print_error(msg):
 
 def print_success(msg):
     print(
+        f"  {BLUE}{BOLD}→{RESET}  {GREEN}{BOLD}[SUCCESS]{RESET}  {GREEN}{msg}{RESET}"
+    )
+
+
+def print_warning(msg):
+    print(
+        f"  {BLUE}{BOLD}→{RESET}  {YELLOW}{BOLD}[WARNING]{RESET}  {YELLOW}{msg}{RESET}"
+    )
+
+
+def print_info(msg):
+    print(
+        f"  {BLUE}{BOLD}→{RESET}  {BLUE}{BOLD}[INFO]{RESET}  {BLUE}{msg}{RESET}"
+    )
+
+
+def print_step(msg):
+    print(
+        f"  {BLUE}{BOLD}→{RESET}  {CYAN}{BOLD}[STEP]{RESET}  {CYAN}{msg}{RESET}"
+    )
+
+
+def print_header(msg):
+    line = "=" * 60
+    print(f"\n{MAGENTA}{BOLD}{line}{RESET}")
