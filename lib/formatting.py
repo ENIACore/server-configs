@@ -72,3 +72,28 @@ def print_group_end(msg: str = "", success: bool = True) -> None:
         print(f"  {BLUE}└─{RESET}")
 
 
+def get_group_input(prompt, default: str = "") -> str:
+    """Prompt user for input with optional default. Returns the input string."""
+    if default:
+        suffix = f" [{default}]: "
+    else:
+        suffix = ": "
+    full_prompt = f"  {BLUE}│{RESET}  {CYAN}{BOLD}[INPUT]{RESET} {CYAN}{prompt}{RESET}{suffix}"
+    reply: str = input(full_prompt).strip()
+    return reply if reply else default
+
+
+def get_input(prompt, default: str = "", secret: bool = False) -> str:
+    """Prompt user for input with optional default. Returns the input string."""
+    if default and secret:
+        suffix = f" [*****]: "
+    elif default:
+        suffix = f" [{default}]: "
+    else:
+        suffix = ": "
+    full_prompt = f"  {BLUE}{BOLD}→{RESET}  {CYAN}{BOLD}[INPUT]{RESET} {CYAN}{prompt}{RESET}{suffix}"
+    if secret:
+        reply: str = getpass.getpass(full_prompt).strip()
+    else:
+        reply: str = input(full_prompt).strip()
+    return reply if reply else default
