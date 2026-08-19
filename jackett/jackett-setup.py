@@ -41,3 +41,25 @@ def main():
             "PUID=1000",
             "-e",
             "PGID=1000",
+            "-e",
+            "TZ=Etc/UTC",
+            "-e",
+            "AUTO_UPDATE=true",
+            "--volume",
+            f"{jackett_config_dir}:/config",
+            "--volume",
+            f"{jackett_downloads_dir}:/downloads",
+            "--restart",
+            "unless-stopped",
+            "lscr.io/linuxserver/jackett:latest",
+        ],
+        notes=[
+            f"Access Jackett at jackett.{root_domain} if nginx is configured",
+            "Configure indexers via the Jackett web UI",
+            "Copy the API key from the web UI for use with Sonarr, Radarr, etc.",
+        ],
+    )
+
+
+if __name__ == "__main__":
+    main()
