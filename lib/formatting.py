@@ -48,3 +48,27 @@ def print_step(msg):
 def print_header(msg):
     line = "=" * 60
     print(f"\n{MAGENTA}{BOLD}{line}{RESET}")
+    print(f"{MAGENTA}{BOLD}{msg.center(60)}{RESET}")
+    print(f"{MAGENTA}{BOLD}{line}{RESET}\n")
+
+
+def print_group_start(title: str) -> None:
+    print(f"  {BOLD}{BLUE}┌─ {title}{RESET}")
+    print(f"  {BLUE}│{RESET}")
+
+
+def print_group_step(msg: str = "") -> None:
+    print(f"  {BLUE}│{RESET}  {msg}")
+
+
+def print_group_end(msg: str = "", success: bool = True) -> None:
+    color = GREEN if success else RED
+    icon = "✓" if success else "✗"
+    if msg:
+        print(f"  {BLUE}│{RESET}")
+        print(f"  {BLUE}└─{RESET} {color}{icon} {BOLD}{msg}{RESET}")
+    else:
+        print(f"  {BLUE}│{RESET}")
+        print(f"  {BLUE}└─{RESET}")
+
+
