@@ -17,3 +17,21 @@ def main():
     jelly_subdomain = require_config_value("JELLY_SUBDOMAIN")
 
     require_dir(media_path, "Media services path")
+
+    jelly_config_dir = f"{media_path}/jelly/config"
+    jelly_cache_dir = f"{media_path}/jelly/cache"
+    jelly_media_dir = f"{media_path}/jelly/media"
+
+    print_step("Creating Jellyfin directories...")
+    ensure_dir(jelly_config_dir)
+    ensure_dir(jelly_cache_dir)
+    ensure_dir(jelly_media_dir)
+
+    ensure_network()
+
+    run_container(
+        name="jellyfin",
+        opts=[
+            "--network",
+            DOCKER_NETWORK_NAME,
+            "--volume",
