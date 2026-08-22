@@ -35,3 +35,22 @@ def main():
             "--network",
             DOCKER_NETWORK_NAME,
             "--volume",
+            f"{jelly_config_dir}:/config",
+            "--volume",
+            f"{jelly_cache_dir}:/cache",
+            "--mount",
+            f"type=bind,source={jelly_media_dir},target=/media",
+            "--restart",
+            "unless-stopped",
+            "jellyfin/jellyfin:latest",
+        ],
+        notes=[
+            f"Access Jellyfin at {jelly_subdomain} if nginx is configured",
+            f"Add media files to {jelly_media_dir}",
+            "Use --net=host instead of --network to enable DLNA device discovery if needed",
+        ],
+    )
+
+
+if __name__ == "__main__":
+    main()
