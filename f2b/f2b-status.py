@@ -12,3 +12,16 @@ JAILS = [
     "nginx-botsearch",
     "nginx-limit-req",
     "sshd",
+]
+
+
+def main():
+    print_header("FAIL2BAN NGINX JAIL STATUS")
+
+    for jail in JAILS:
+        run_cmd(f"sudo fail2ban-client status {jail}")
+        print_info("")
+
+
+if __name__ == "__main__":
+    main()
