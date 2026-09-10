@@ -1,0 +1,16 @@
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+
+    server_name jfa.${DOMAIN};
+
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+    include /etc/nginx/snippets/ssl-params.conf;
+
+    #Server security
+    include /etc/nginx/snippets/security.conf;
+    include /etc/nginx/snippets/block-exploits.conf;
+
+    #Search engine indexing
