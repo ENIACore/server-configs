@@ -1,0 +1,8 @@
+[Interface]
+# Bouncing = 
+# NetShield = 
+# Moderate NAT = off
+# NAT-PMP (Port Forwarding) = on
+# VPN Accelerator = on
+PrivateKey = 
+Address = 
