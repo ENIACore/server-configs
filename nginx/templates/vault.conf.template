@@ -18,3 +18,24 @@ server {
     location /robots.txt { return 200 "User-agent: *\nDisallow: /\n"; }
 
     # Global settings for this server
+    client_max_body_size 128M;       # Allow reasonable upload size for attachments
+    client_body_buffer_size 512k;    # Memory buffer for uploads before using disk
+
+    # SignalR negotiation endpoint
+    location ^~ /notifications/hub/negotiate {
+        proxy_pass http://vaultwarden:80;
+        include /etc/nginx/snippets/http-proxy-params.conf;
+    }
+
+
+    location ^~ /notifications/hub {
+        proxy_pass http://vaultwarden:80;
+        include /etc/nginx/snippets/ws-proxy-params.conf;
+    }
+
+    location / {
+        proxy_pass http://vaultwarden:80;
+        include /etc/nginx/snippets/http-proxy-params.conf;
+    }
+
+}
