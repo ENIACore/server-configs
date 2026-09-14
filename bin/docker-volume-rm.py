@@ -31,3 +31,19 @@ def remove_docker_volumes(volumes: list[str]) -> None:
         print_error("Failed to remove one or more volumes")
         print_error(result.stderr.strip())
         sys.exit(1)
+
+
+def main() -> None:
+    print_info("Fetching docker volumes...")
+    volumes = get_docker_volumes()
+
+    if not volumes:
+        print_warning("No docker volumes found")
+        return
+
+    print_info(f"Found {len(volumes)} volume(s): {', '.join(volumes)}")
+    remove_docker_volumes(volumes)
+
+
+if __name__ == "__main__":
+    main()
