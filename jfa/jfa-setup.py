@@ -34,3 +34,21 @@ def main():
             DOCKER_NETWORK_NAME,
             "--volume",
             f"{jfa_config_dir}:/data",
+            "--volume",
+            f"{jelly_config_dir}:/jf",
+            "--volume",
+            "/etc/localtime:/etc/localtime:ro",
+            "--restart",
+            "unless-stopped",
+            "hrfee/jfa-go",
+        ],
+        notes=[
+            "Access JFA-Go at jfa.<domain> once the 'jfa' nginx site is enabled (not published on the host — reachable only via nginx or the Docker network)",
+            "Connect it to your Jellyfin instance (http://jellyfin:8096 on the Docker network)",
+            "Configure invite links and user settings",
+        ],
+    )
+
+
+if __name__ == "__main__":
+    main()
