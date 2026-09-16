@@ -52,11 +52,17 @@ def update_system_packages() -> None:
 
     print_step("Running apt-get upgrade...")
     r = subprocess.run(["apt-get", "upgrade", "-y"])
-    if r.returncode == 0:
-        print_success("System packages are up to date")
-    else:
+    if r.returncode != 0:
         print_error("apt-get upgrade failed")
         sys.exit(1)
+
+    print_step("Running apt-get autoremove...")
+    subprocess.run(["apt-get", "autoremove", "-y"])
+
+    print_step("Running apt-get autoclean...")
+    subprocess.run(["apt-get", "autoclean"])
+
+    print_success("System packages are up to date")
 
 
 def _image_id(image: str) -> str:
