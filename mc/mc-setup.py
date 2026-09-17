@@ -27,3 +27,32 @@ MC_MODRINTH_PROJECTS = "lithium"
 
 def generate_rcon_password(rcon_pass_file: str) -> str:
     password = secrets.token_hex(16)
+    from pathlib import Path
+
+    path = Path(rcon_pass_file)
+    path.write_text(password + "\n")
+    path.chmod(0o600)
+    print_info(f"RCON password stored in {rcon_pass_file}")
+    return password
+
+
+def main():
+    print_header("SETTING UP MINECRAFT SERVER (FABRIC + LITHIUM)")
+
+    core_path = require_config_value("CORE_SERVICES_PATH")
+    require_dir(core_path, "Core services path")
+
+    mc_ops = prompt_and_save(
+        "MC_OPS",
+        "Enter Minecraft operator usernames (comma-separated) — ops can run server commands",
+    )
+    mc_whitelist = prompt_and_save(
+        "MC_WHITELIST",
+        "Enter Minecraft whitelist usernames (comma-separated) — only these players can join",
+    )
+
+    mc_path = f"{core_path}/mc-data"
+    mc_data_path = f"{mc_path}/data"
+    rcon_pass_file = f"{mc_path}/.rcon_password"
+
+    print_step("Creating Minecraft server directories...")
