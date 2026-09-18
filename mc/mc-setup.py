@@ -85,3 +85,32 @@ def main():
             f"VIEW_DISTANCE={MC_VIEW_DISTANCE}",
             "-e",
             f"OPS={mc_ops}",
+            "-e",
+            f"WHITELIST={mc_whitelist}",
+            "-e",
+            f"ENFORCE_WHITELIST={MC_ENFORCE_WHITELIST}",
+            "-e",
+            f"TZ={MC_TZ}",
+            "-e",
+            "ENABLE_RCON=true",
+            "-e",
+            f"RCON_PASSWORD={rcon_password}",
+            "-e",
+            "SERVER_PORT=25565",
+            "-e",
+            f"MODRINTH_PROJECTS={MC_MODRINTH_PROJECTS}",
+            "-v",
+            f"{mc_data_path}:/data",
+            "itzg/minecraft-server:latest",
+        ],
+        notes=[
+            "Connect via Minecraft client at <server-ip>:25565",
+            f"Monitor startup progress: docker logs -f {MC_CONTAINER_NAME}",
+            f"World data stored in {mc_data_path}",
+            f"RCON password stored in {rcon_pass_file}",
+        ],
+    )
+
+
+if __name__ == "__main__":
+    main()
