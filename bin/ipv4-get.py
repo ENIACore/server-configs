@@ -16,3 +16,22 @@ def get_public_ipv4() -> str:
         try:
             with urllib.request.urlopen(url, timeout=5) as resp:
                 ip = resp.read().decode().strip()
+                if ip:
+                    return ip
+        except Exception:
+            continue
+    return ""
+
+
+def main() -> None:
+    print_info("Fetching public IPv4 address...")
+    ip = get_public_ipv4()
+    if ip:
+        print_success(f"Public IPv4 is {ip}")
+    else:
+        print_error("Failed to retrieve public IPv4 address")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
