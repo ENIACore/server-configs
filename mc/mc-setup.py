@@ -56,3 +56,32 @@ def main():
     rcon_pass_file = f"{mc_path}/.rcon_password"
 
     print_step("Creating Minecraft server directories...")
+    ensure_dir(mc_data_path)
+
+    rcon_password = generate_rcon_password(rcon_pass_file)
+
+    ensure_network()
+
+    run_container(
+        name=MC_CONTAINER_NAME,
+        opts=[
+            "--network",
+            DOCKER_NETWORK_NAME,
+            "--restart",
+            "unless-stopped",
+            "-e",
+            "EULA=TRUE",
+            "-e",
+            f"TYPE={MC_TYPE}",
+            "-e",
+            f"VERSION={MC_VERSION}",
+            "-e",
+            f"MEMORY={MC_MEMORY}",
+            "-e",
+            f"DIFFICULTY={MC_DIFFICULTY}",
+            "-e",
+            f"MAX_PLAYERS={MC_MAX_PLAYERS}",
+            "-e",
+            f"VIEW_DISTANCE={MC_VIEW_DISTANCE}",
+            "-e",
+            f"OPS={mc_ops}",
