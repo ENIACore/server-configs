@@ -21,3 +21,26 @@ WG_CONF_SRC = QBIT_CONFIG_PATH / "wg0.conf"
 
 def main():
     print_header("SETTING UP QBITTORRENT WITH WIREGUARD VPN")
+
+    media_path = require_config_value("MEDIA_SERVICES_PATH")
+    qbit_subdomain = require_config_value("QBIT_SUBDOMAIN")
+
+    require_file(str(WG_CONF_SRC), "WireGuard config file (wg0.conf)")
+    require_dir(media_path, "Media services path")
+
+    qbit_path = f"{media_path}/qbit-data"
+    qbit_wg_dir = f"{qbit_path}/wireguard"
+    qbit_wg_target = f"{qbit_wg_dir}/wg0.conf"
+
+    print_step("Creating qBittorrent directories...")
+    ensure_dir(qbit_wg_dir)
+
+    print_step("Copying WireGuard config to qBittorrent config directory...")
+    run_cmd(f"cp {WG_CONF_SRC} {qbit_wg_target}")
+
+    ensure_network()
+
+    run_container(
+        name="qbittorrent",
+        opts=[
+            "--network",
