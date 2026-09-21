@@ -66,3 +66,26 @@ def main():
             "VPN_AUTO_PORT_FORWARD=true",
             "-e",
             "WEBUI_PORTS=8080/tcp",
+            "-e",
+            "VPN_LAN_LEAK_ENABLED=false",
+            "-e",
+            "VPN_HEALTHCHECK_ENABLED=false",
+            "-e",
+            "PRIVOXY_ENABLED=false",
+            "-e",
+            "UNBOUND_ENABLED=false",
+            "-e",
+            f"VPN_LAN_NETWORK={VPN_LAN_CIDR}",
+            "-v",
+            f"{qbit_path}:/config",
+            "ghcr.io/hotio/qbittorrent:latest",
+        ],
+        notes=[
+            f"Access qBittorrent WebUI at {qbit_subdomain} if nginx is configured",
+            "Validate VPN connection: docker logs qbittorrent",
+        ],
+    )
+
+
+if __name__ == "__main__":
+    main()
