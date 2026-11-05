@@ -64,6 +64,7 @@ def main():
 
     run_container(
         name=MC_CONTAINER_NAME,
+        image="itzg/minecraft-server:latest",
         opts=[
             "--network",
             DOCKER_NETWORK_NAME,
@@ -101,7 +102,6 @@ def main():
             f"MODRINTH_PROJECTS={MC_MODRINTH_PROJECTS}",
             "-v",
             f"{mc_data_path}:/data",
-            "itzg/minecraft-server:latest",
         ],
         notes=[
             "Connect via Minecraft client at <server-ip>:25565",

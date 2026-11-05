@@ -62,20 +62,69 @@ def ensure_network() -> None:
         sys.exit(1)
 
 
+def pull_image(image: str) -> None:
+    """Pull the latest version of an image, exiting on failure."""
+    print_step(f"Pulling image '{image}'")
+
+    result = subprocess.run(
+        ["docker", "pull", image], capture_output=True, text=True
+    )
+
+    if result.returncode == 0:
+        print_success(f"Image '{image}' is up to date")
+    else:
+        print_error(f"Failed to pull image '{image}': {result.stderr.strip()}")
+        sys.exit(1)
+
+
+def remove_container(name: str) -> None:
+    """Stop and remove an existing container so it can be recreated."""
+    probe = subprocess.run(
+        ["docker", "container", "inspect", name],
+        capture_output=True,
+    )
+
+    if probe.returncode != 0:
+        return
+
+    print_step(f"Removing existing container '{name}' to recreate it")
+
+    result = subprocess.run(
+        ["docker", "rm", "-f", name], capture_output=True, text=True
+    )
+
+    if result.returncode == 0:
+        print_success(f"Removed existing container '{name}'")
+    else:
+        print_error(
+            f"Failed to remove container '{name}': {result.stderr.strip()}"
+        )
+        sys.exit(1)
+
+
 def run_container(
-    name: str, opts: list[str], notes: list[str] | None = None
+    name: str,
+    image: str,
+    opts: list[str],
+    notes: list[str] | None = None,
 ) -> None:
-    """Run a Docker container and print result.
+    """Pull the image, replace any existing container, and run it.
+
+    Pulls first so a failed pull leaves the existing container running.
 
     Args:
         name:  Container name (passed as --name and used in output).
-        opts:  All additional docker run args (volumes, network, restart, image, etc.).
-               Do not include 'docker', 'run', '-d', or '--name'.
+        image: Image to pull and run (e.g. 'nginx:latest').
+        opts:  All additional docker run args (volumes, network, restart, etc.).
+               Do not include 'docker', 'run', '-d', '--name', or the image.
         notes: Optional list of follow-up info lines printed on success.
     """
+    pull_image(image)
+    remove_container(name)
+
     print_group_start(f"Starting container '{name}'")
 
-    cmd = ["docker", "run", "-d", "--name", name, *opts]
+    cmd = ["docker", "run", "-d", "--name", name, *opts, image]
     print_group_step(f"Running: {GREY}{' '.join(cmd)}{RESET}")
 
     result = subprocess.run(cmd, capture_output=True, text=True)

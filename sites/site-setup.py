@@ -4,7 +4,6 @@ import sys
 import urllib.parse
 
 sys.path.insert(0, "/usr/local/sbin/_lib")
-from common import run_cmd
 from config import (
     DOCKER_NETWORK_NAME,
     prompt_and_save,
@@ -43,10 +42,9 @@ def main():
 
     ensure_network()
 
-    run_cmd("docker pull eniacore/personal-site:latest")
-
     run_container(
         name="server-personal-site",
+        image="eniacore/personal-site:latest",
         opts=[
             "--network",
             DOCKER_NETWORK_NAME,
@@ -58,7 +56,6 @@ def main():
             f"DATABASE_URL={pg_conn_str}",
             "-v",
             "server-personal-site-media:/app/media",
-            "eniacore/personal-site:latest",
         ],
     )
 

@@ -77,6 +77,7 @@ def main():
 
     run_container(
         name="vaultwarden",
+        image="vaultwarden/server:latest",
         opts=[
             "--network",
             DOCKER_NETWORK_NAME,
@@ -90,7 +91,6 @@ def main():
             f"{vault_data_dir}:/data/",
             "--restart",
             "unless-stopped",
-            "vaultwarden/server:latest",
         ],
         notes=[
             f"Access the admin panel at https://{vault_subdomain}/admin",

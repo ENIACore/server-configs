@@ -32,6 +32,7 @@ def main():
 
     run_container(
         name="jackett",
+        image="lscr.io/linuxserver/jackett:latest",
         opts=[
             "--hostname",
             "jackett.internal",
@@ -51,7 +52,6 @@ def main():
             f"{jackett_downloads_dir}:/downloads",
             "--restart",
             "unless-stopped",
-            "lscr.io/linuxserver/jackett:latest",
         ],
         notes=[
             f"Access Jackett at jackett.{root_domain} if nginx is configured",

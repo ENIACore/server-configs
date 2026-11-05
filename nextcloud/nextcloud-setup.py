@@ -31,6 +31,7 @@ def main():
 
     run_container(
         name="nextcloud-aio-mastercontainer",
+        image="ghcr.io/nextcloud-releases/all-in-one:latest",
         opts=[
             "--init",
             "--sig-proxy=false",
@@ -52,7 +53,6 @@ def main():
             "nextcloud_aio_mastercontainer:/mnt/docker-aio-config",
             "--volume",
             "/var/run/docker.sock:/var/run/docker.sock:ro",
-            "ghcr.io/nextcloud-releases/all-in-one:latest",
         ],
         notes=[
             "Enable the 'nextcloud-master' nginx site (nginx-enable nextcloud-master) to reach the AIO admin interface at https://nextcloud-master.<domain>",

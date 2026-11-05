@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Container setup scripts now pull the latest image and replace any
+  existing container of the same name, so re-running a `*-setup` command
+  updates that service. `run_container` takes the image as a separate
+  `image` argument instead of the last item in `opts`.
+
 ## [1.0.0] - 2026-09-22
 
 Initial versioned release. Everything up to this point was developed as a

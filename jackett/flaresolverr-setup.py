@@ -19,6 +19,7 @@ def main():
 
     run_container(
         name="flaresolverr",
+        image="ghcr.io/flaresolverr/flaresolverr:latest",
         opts=[
             "--network",
             DOCKER_NETWORK_NAME,
@@ -28,7 +29,6 @@ def main():
             "TZ=Etc/UTC",
             "--restart",
             "unless-stopped",
-            "ghcr.io/flaresolverr/flaresolverr:latest",
         ],
         notes=[
             f"FlareSolverr is accessible to other containers on {DOCKER_NETWORK_NAME} at http://flaresolverr:8191",

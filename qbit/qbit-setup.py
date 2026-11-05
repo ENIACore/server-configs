@@ -42,6 +42,7 @@ def main():
 
     run_container(
         name="qbittorrent",
+        image="ghcr.io/hotio/qbittorrent:latest",
         opts=[
             "--network",
             DOCKER_NETWORK_NAME,
@@ -78,7 +79,6 @@ def main():
             f"VPN_LAN_NETWORK={VPN_LAN_CIDR}",
             "-v",
             f"{qbit_path}:/config",
-            "ghcr.io/hotio/qbittorrent:latest",
         ],
         notes=[
             f"Access qBittorrent WebUI at {qbit_subdomain} if nginx is configured",

@@ -29,6 +29,7 @@ def main():
 
     run_container(
         name="jfa-go",
+        image="hrfee/jfa-go",
         opts=[
             "--network",
             DOCKER_NETWORK_NAME,
@@ -40,7 +41,6 @@ def main():
             "/etc/localtime:/etc/localtime:ro",
             "--restart",
             "unless-stopped",
-            "hrfee/jfa-go",
         ],
         notes=[
             "Access JFA-Go at jfa.<domain> once the 'jfa' nginx site is enabled (not published on the host — reachable only via nginx or the Docker network)",

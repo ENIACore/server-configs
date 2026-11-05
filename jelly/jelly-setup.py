@@ -31,6 +31,7 @@ def main():
 
     run_container(
         name="jellyfin",
+        image="jellyfin/jellyfin:latest",
         opts=[
             "--network",
             DOCKER_NETWORK_NAME,
@@ -42,7 +43,6 @@ def main():
             f"type=bind,source={jelly_media_dir},target=/media",
             "--restart",
             "unless-stopped",
-            "jellyfin/jellyfin:latest",
         ],
         notes=[
             f"Access Jellyfin at {jelly_subdomain} if nginx is configured",

@@ -34,6 +34,7 @@ def main():
     ensure_network()
     run_container(
         name="server-proxy",
+        image="nginx:latest",
         opts=[
             "--restart",
             "unless-stopped",
@@ -76,7 +77,6 @@ def main():
             "--health-timeout=3s",
             "--health-retries=3",
             "--health-start-period=30s",
-            "nginx:latest",
         ],
         notes=[],
     )

@@ -30,6 +30,7 @@ def main():
 
     run_container(
         name=PG_CONTAINER_NAME,
+        image=PG_IMAGE,
         opts=[
             "--network",
             DOCKER_NETWORK_NAME,
@@ -39,7 +40,6 @@ def main():
             f"{PG_DATA_VOLUME}:{PG_DATA_PATH}",
             "--restart",
             "unless-stopped",
-            PG_IMAGE,
         ],
         notes=[
             f"PostgreSQL is available to containers on '{DOCKER_NETWORK_NAME}' at port 5432",
